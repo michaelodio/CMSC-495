@@ -7,15 +7,20 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class Registration extends JFrame {
+
+	Connection connection = null;
 
 	private JPanel contentPane;
 	private JTextField fNameTxtField;
@@ -32,6 +37,8 @@ public class Registration extends JFrame {
 	 * Create the frame.
 	 */
 	public Registration() {
+		connection = sqliteConnection.dbConnector();
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 811, 516);
 		contentPane = new JPanel();
@@ -101,6 +108,26 @@ public class Registration extends JFrame {
 		btnRegister.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				try {
+					String query = "insert into Users (FirstName,LastName,Username,Password,Email,Phone) values (?,?,?,?,?,?)";
+					PreparedStatement pst = connection.prepareStatement(query);
+					pst.setString(1,fNameTxtField.getText());
+					pst.setString(2,lNameTxtField.getText());
+					pst.setString(3,userNameTxtField.getText());
+					pst.setString(4,passwordTxtField.getText());
+					pst.setString(5,emailTxtField.getText());
+					pst.setString(6,phoneNumberTxtField.getText());
+
+					pst.execute();
+
+					JOptionPane.showMessageDialog(null,"Account Created");
+
+					pst.close();
+
+				}catch(Exception p) {
+					p.printStackTrace();
+				}
+
 			}
 		});
 		btnRegister.setBounds(45, 316, 231, 23);
