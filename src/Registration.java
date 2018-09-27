@@ -5,8 +5,10 @@
  *
  */
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -31,7 +33,12 @@ public class Registration extends JFrame {
 	private JTextField emailTxtField;
 	private JLabel lblBankRegistration;
 	private JButton btnRegister;
+	private JButton btnReturn;
 
+	public void close() {
+		WindowEvent winClosingEvent = new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
+	}
 
 	/**
 	 * Create the frame.
@@ -39,7 +46,7 @@ public class Registration extends JFrame {
 	public Registration() {
 		connection = sqliteConnection.dbConnector();
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 811, 516);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -124,6 +131,8 @@ public class Registration extends JFrame {
 
 					pst.close();
 
+
+
 				}catch(Exception p) {
 					p.printStackTrace();
 				}
@@ -132,6 +141,26 @@ public class Registration extends JFrame {
 		});
 		btnRegister.setBounds(45, 316, 231, 23);
 		contentPane.add(btnRegister);
+
+		btnReturn = new JButton("Return to Login");
+		btnReturn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+
+                    close();
+					LoginPane frame = new LoginPane();
+					frame.setVisible(true);
+				} catch (Exception d) {
+					d.printStackTrace();
+				}
+			}
+
+
+		});
+		btnReturn.setBounds(366, 316, 216, 23);
+		contentPane.add(btnReturn);
 	}
 
 }
