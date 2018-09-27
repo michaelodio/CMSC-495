@@ -1,3 +1,5 @@
+
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -7,38 +9,37 @@ import javax.swing.border.EmptyBorder;
 public class GenDisplay extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField depositTextField;
-	private JTextField withdrawTextField;
-
+	private JTextField textField;
+	private JTextField textField_1;
 
 	/**
 	 * Create the frame.
 	 */
 	public GenDisplay() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 459, 365);
+		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JButton btnDeposit = new JButton("Deposit");
-		btnDeposit.setBounds(287, 98, 89, 23);
-		contentPane.add(btnDeposit);
+		textField = new JTextField();
+		textField.setBounds(29, 47, 86, 20);
+		contentPane.add(textField);
+		textField.setColumns(10);
 
-		JButton btnWithdraw = new JButton("Withdraw ");
-		btnWithdraw.setBounds(287, 132, 89, 23);
-		contentPane.add(btnWithdraw);
+		textField_1 = new JTextField();
+		textField_1.setBounds(29, 95, 86, 20);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
 
-		depositTextField = new JTextField();
-		depositTextField.setBounds(10, 99, 267, 20);
-		contentPane.add(depositTextField);
-		depositTextField.setColumns(10);
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(190, 46, 89, 23);
+		contentPane.add(btnNewButton);
 
-		withdrawTextField = new JTextField();
-		withdrawTextField.setColumns(10);
-		withdrawTextField.setBounds(10, 133, 267, 20);
-		contentPane.add(withdrawTextField);
+		JButton btnNewButton_1 = new JButton("New button");
+		btnNewButton_1.setBounds(190, 94, 89, 23);
+		contentPane.add(btnNewButton_1);
 	}
 
 }
