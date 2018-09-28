@@ -4,27 +4,42 @@ import java.sql.SQLException;
 
 public class Database {
 
-    public static void connect() {
-        Connection conn = null;
+    Connection databaseConn;
+    String url = "jdbc:sqlite:Resources/group7.db";
+
+    public Database(String url){
+
+        connect(url);
+    }
+
+    public Database (){
+
+        connect(this.url);
+    }
+
+    private void connect(String url) {
+        databaseConn = null;
         try {
-            // db parameters
-            String url = "jdbc:sqlite:C:/sqlite/db/chinook.db";
             // create a connection to the database
-            conn = DriverManager.getConnection(url);
+            databaseConn = DriverManager.getConnection(url);
 
             System.out.println("Connection to SQLite has been established.");
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
+       /* } finally {
             try {
-                if (conn != null) {
-                    conn.close();
+                if (databaseConn != null) {
+                    databaseConn.close();
                 }
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
-            }
+            }*/
         }
+    }
+
+    public Connection getConnection(){
+        return databaseConn;
     }
 
 }
