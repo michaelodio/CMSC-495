@@ -17,68 +17,93 @@ public class Input {
 
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Enter Account Info:");
-        System.out.print("Username:");
-        username = in.nextLine();
-        System.out.print("\nPassword:");
-        password = in.nextLine();
-        System.out.print("\nEmail:");
-        emailAddress = in.nextLine();
-        System.out.print("\nFirst Name:");
-        fName = in.nextLine();
-        System.out.print("\nLast Name:");
-        lName = in.nextLine();
-        System.out.print("\nPhone Number:");
-        phoneNum = Integer.parseInt(in.nextLine());
-        System.out.print("\nChecking or Savings?:");
-        accountType = in.nextLine();
+        while(true) {
+            System.out.println("Select an option: " +
+                    "\n1. Login" +
+                    "\n2. Register" +
+                    "\nChoice: ");
+
+            int option = Integer.parseInt(in.nextLine());
+
+            if (option == 1) {
 
 
-        try {
-            createUserAccount(accountType);
-        } catch (SQLException e) {
-            System.out.println("------------------AccountCreate-----------------");
-            System.out.println("Cannot create new account: " + e);
-            System.out.println("--------------------------------------------------------");
-        }
+                System.out.println("Login:");
+                System.out.println("Username:");
+                username = in.nextLine();
+                System.out.println("Password:");
+                password = in.nextLine();
 
+                if (login(username, password)) {
+                    System.out.println("login Successful!");
 
-        /*if (new user){
-            createUserAccount(accountType);
-        }else if(currentUser){
-            if (login() returns true){
-                while (true){
-                    //prompt user to display balance, transaction history, create transaction or create new account;
-                    if (display balance and transaction hist){
-                        for all accounts in database owned by user
-                        Display disp = new Display();
-                        disp.displayBalance(account);
-                    }else if(create new account){
-                        prompt user for accountType;
-                        createNewAccount(accountType);
+                    System.out.println("Create new Account:");
+                    System.out.println("Select account type:" +
+                    "\n 1. Checking" +
+                    "\n 2. Savings");
+                    int typeChoice = Integer.parseInt(in.nextLine());
+                    if (typeChoice == 1){
+                        accountType = "Checking";
                     }else{
-                        prompt user for transactionType;
-                        createTransaction(transactionType);
+                        accountType = "Savings";
                     }
+                    System.out.println("You have selected " + accountType);
+                    System.out.println("Enter initial balance: ");
+                    double balance = Double.parseDouble(in.nextLine());
+
+                    createNewAccount(accountType, balance);
+
                 }
-            }else{display login error and display login prompt}
 
-        }*/
+            } else {
 
+                System.out.println("Enter Account Info:");
+                System.out.print("Username:");
+                username = in.nextLine();
+                System.out.print("\nPassword:");
+                password = in.nextLine();
+                System.out.print("\nEmail:");
+                emailAddress = in.nextLine();
+                System.out.print("\nFirst Name:");
+                fName = in.nextLine();
+                System.out.print("\nLast Name:");
+                lName = in.nextLine();
+                System.out.print("\nPhone Number:");
+                phoneNum = Integer.parseInt(in.nextLine());
+                System.out.print("\nChecking or Savings?:");
+                accountType = in.nextLine();
+
+
+                try {
+                    createUserAccount(accountType);
+                } catch (SQLException e) {
+                    System.out.println("------------------AccountCreate-----------------");
+                    System.out.println("Cannot create new account: " + e);
+                    System.out.println("--------------------------------------------------------");
+                }
+            }
+        }
     }
     void createUserAccount(String accountType) throws SQLException {
-        new Account(username, password, emailAddress, fName, lName, phoneNum, accountType);
+        new Account(username, password, emailAddress, fName, lName, phoneNum);
     }
-    void createNewAccount(String accountType){
-        //TODO add to database new Account(username, accountType);
+    void createNewAccount(String accountType, double balance){
+        new Account(username, accountType, balance);
     }
-   /* boolean login(String username, String password){
-        //TODO send username and password to Login to check database;
-        if (Login returns true){
-            return true;
-        }else{return false}
+    boolean login(String username, String password){
+        Login login = new Login(username, password);
+        try {
+            if (login.checkCredentials()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    double createTransaction(Account account; String transactionType, int amount){
+    /*double createTransaction(Account account; String transactionType, int amount){
         if (transactionType is withdraw){
             withdraw from account;
         }else if(transactionType is deposit){

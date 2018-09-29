@@ -9,66 +9,56 @@ public class Account {
     private String accountOwner;
     private int accountNumber;
     private double balance = 0d;
+    private String username;
+    private String password;
+    private String emailAddress;
+    private String fName;
+    private String lName;
+    private int phoneNum;
     private Database database;
     private Connection dbConn;
 
 
-    public Account(String username, String password, String emailAddress, String fName, String lName, int phoneNum, String
-            accountType) throws SQLException {
+    //This constructor acts as a new account registration for users
+    public Account(String username, String password, String emailAddress, String fName, String lName, int phoneNum) throws SQLException {
 
         database = new Database();
         dbConn = database.getConnection();
 
-        //SQL query to count number of rows in the accounts table
-
-        Statement stmt = null;
-        String query = "select COUNT(*) from Accounts";
-        int size = 0;
-        try {
-            stmt = dbConn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                size++;
-            }
-        } catch (SQLException e ) {
-            System.out.println("------------------Tablerize.getRowCount-----------------");
-            System.out.println("Cannot get resultSet row count: " + e);
-            System.out.println("--------------------------------------------------------");
-        } finally {
-            if (stmt != null) { stmt.close(); }
-        }
-
-
-        this.accountNumber =  size + 1;
+        //this.accountNumber = getAccountNum();
         this.accountOwner = username;
         this.accountType = accountType;
+        this.username = username;
+        this.password = password;
+        this.emailAddress = emailAddress;
+        this.fName = fName;
+        this.lName = lName;
+        this.phoneNum = phoneNum;
 
         // creates the table if it does not exist
 
         String createString =
-                "create table if not exists " + "Accounts" +
+                "create table if not exists " + "Users" +
                         "(USERNAME varchar(40) NOT NULL, " +
                         "PASSWORD varchar(40) NOT NULL, " +
                         "EMAIL varchar(40) NOT NULL, " +
                         "FNAME varchar(40) NOT NULL, " +
                         "LNAME varchar(20) NOT NULL, " +
                         "PHONENUM integer NOT NULL, " +
-                        "ACCOUNTTYPE varchar(40) NOT NULL, " +
-                        "ACCOUNTOWNER varchar(40) NOT NULL, " +
-                        "ACCOUNTNUMBER integer NOT NULL, " +
-                        "BALANCE DECIMAL(14,2) NOT NULL, " +
-                        "PRIMARY KEY (ACCOUNTNUMBER))";
+                        "ID integer PRIMARY KEY AUTOINCREMENT) ";
 
         Statement createStmt = null;
         try {
-           createStmt = dbConn.createStatement();
-           createStmt.executeUpdate(createString);
+            createStmt = dbConn.createStatement();
+            createStmt.executeUpdate(createString);
         } catch (SQLException e) {
             System.out.println("------------------TableCreate-----------------");
             System.out.println("Cannot create table: " + e);
             System.out.println("--------------------------------------------------------");
         } finally {
-            if (createStmt != null) { createStmt.close(); }
+            if (createStmt != null) {
+                createStmt.close();
+            }
         }
 
         //adding account information
@@ -77,58 +67,114 @@ public class Account {
         try {
             insertStmt = dbConn.createStatement();
             insertStmt.executeUpdate(
-                    "insert into Accounts " +
-                            "values('" + username + "','"+ password +"', " +
-                            "'"+ emailAddress +"', " +
-                            "'"+ fName +"', " +
-                            "'"+ lName +"', " +
-                            "'"+ phoneNum +"', " +
-                            "'"+ accountType +"', " +
-                            "'"+ accountOwner +"', " +
-                            "'"+ accountNumber +"', " +
-                            "'"+ balance +"')");
+                    "insert into Users (USERNAME, PASSWORD, EMAIL, FNAME, LNAME, PHONENUM) " +
+                            "values('" + username + "','" + password + "', " +
+                            "'" + emailAddress + "', " +
+                            "'" + fName + "', " +
+                            "'" + lName + "', " +
+                            "'" + phoneNum + "')");
         } catch (SQLException e) {
             System.out.println("------------------TableInsert-----------------");
             System.out.println("Cannot insert into table: " + e);
             System.out.println("--------------------------------------------------------");
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (insertStmt != null) {
+                insertStmt.close();
+            }
+        }
+
+
+    }
+
+    //this constructor creates checking or savings accounts for existing users
+    public Account (String username, String accountType, double balance){
+
+        database = new Database();
+        dbConn = database.getConnection();
+        try {
+            createAccount(username, accountType, balance);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    /*public Account(String username, String accountType) {
-        this.accountNumber = count of database entries + 1;
-        this.accountOwner = username;
-        this.accountType = accountType;
 
-        create new database entry and add accountNumber and accountOwner;
-        create new user database entry and add
-        username
-                password
-        emailAddress
-                fName
-        lName
-                phonNum;
-    }*/
+    void createAccount(String username, String accountType, double balance) throws SQLException {
 
-   /* public void setBalance(double balance) {
+        // creates the table if it does not exist
+
+        String createString =
+                "create table if not exists " + "Accounts" +
+                        "(USERNAME varchar(40) NOT NULL, " +
+                        "ACCOUNTTYPE varchar(40) NOT NULL, " +
+                        "BALANCE DECIMAL(14, 2), " +
+                        "ID integer PRIMARY KEY AUTOINCREMENT)";
+
+        Statement createStmt = null;
+        try {
+            createStmt = dbConn.createStatement();
+            createStmt.executeUpdate(createString);
+        } catch (SQLException e) {
+            System.out.println("------------------TableCreate-----------------");
+            System.out.println("Cannot create table: " + e);
+            System.out.println("--------------------------------------------------------");
+        } finally {
+            if (createStmt != null) {
+                createStmt.close();
+            }
+        }
+
+        //adding account information
+
+        Statement insertStmt = null;
+        try {
+            insertStmt = dbConn.createStatement();
+            insertStmt.executeUpdate(
+                    "insert into Accounts (USERNAME, ACCOUNTTYPE, BALANCE)" +
+                            "values('" + username + "','" + accountType + "', " +
+                            "'" + balance + "')");
+        } catch (SQLException e) {
+            System.out.println("------------------TableInsert-----------------");
+            System.out.println("Cannot insert into table: " + e);
+            System.out.println("--------------------------------------------------------");
+        } finally {
+            if (insertStmt != null) {
+                insertStmt.close();
+            }
+        }
+
+
+    }
+
+    public void setBalance(double balance, int accountNumber) throws SQLException {
         this.balance = balance;
-        put new balance in database;
-        public double getBalance () {
-            balance = balance from database;
-            return balance;
-        }
-        public int getAccountNumber () {
-            return accountNumber;
-        }
+        Statement insertStmt = null;
 
-    }*/
+        try {
+            insertStmt = dbConn.createStatement();
+            insertStmt.executeUpdate(
+                    "UPDATE Accounts " +
+                            "SET balance = " +
+                            "values('" + balance + "')" +
+                            " WHERE ID = " + accountNumber );
+        } catch (SQLException e) {
+            System.out.println("------------------TableInsert-----------------");
+            System.out.println("Cannot insert into table: " + e);
+            System.out.println("--------------------------------------------------------");
+        } finally {
+            if (insertStmt != null) {
+                insertStmt.close();
+            }
+        }
+    }
 
-    public String getAccountType() {
+
+
+    /*public String getAccountType() {
         return this.accountType;
     }
 
     public double getBalance() {
         return this.balance;
-    }
+    }*/
 }
