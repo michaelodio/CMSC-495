@@ -1,7 +1,9 @@
+
 public class Group7Bank {
 
     public static void main(String args[]){
 
-       Input input = new Input();
+       Input frame = new Input();
+       frame.setVisible(true);
     }
 }
