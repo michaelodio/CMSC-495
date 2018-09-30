@@ -51,6 +51,11 @@ public class Display extends JDialog {
 		JRadioButton rdbtnSavings = new JRadioButton("Savings");
 		rdbtnSavings.setBounds(233, 7, 109, 23);
 		contentPanel.add(rdbtnSavings);
+		
+		ButtonGroup bgroup = new ButtonGroup();
+                bgroup.add(rdbtnChecking);
+                bgroup.add(rdbtnSavings);
+
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
