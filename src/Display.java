@@ -57,37 +57,34 @@ public class Display extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
-				okButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						StringBuilder warnings = new StringBuilder();
+				okButton.addActionListener(e -> {
+					StringBuilder warnings = new StringBuilder();
 
-						if(balanceTxtField.getText().isEmpty()) {
-							warnings.append("Balance must not be empty\n");
-						} else {
-							try {
-								balance = Integer.parseInt(balanceTxtField.getText());
-							}catch(NumberFormatException ex) {
-								warnings.append("Balance must be a number");
-							}
-
-						}
-						if (rdbtnChecking.isSelected()) {
-					    	accountType = "Checking";
-
-					    }
-					    else if (rdbtnSavings.isSelected()) {
-					    	accountType = "Savings";
-					    }
-						if(warnings.length()>0) {
-							JOptionPane.showMessageDialog(null, warnings.toString());
-						}
-						else {
-
-							Input.createNewAccount(accountType, balance);
+					if(balanceTxtField.getText().isEmpty()) {
+						warnings.append("Balance must not be empty\n");
+					} else {
+						try {
+							balance = Integer.parseInt(balanceTxtField.getText());
+						}catch(NumberFormatException ex) {
+							warnings.append("Balance must be a number");
 						}
 
 					}
+					if (rdbtnChecking.isSelected()) {
+						accountType = "Checking";
+
+					}
+					else if (rdbtnSavings.isSelected()) {
+						accountType = "Savings";
+					}
+					if(warnings.length()>0) {
+						JOptionPane.showMessageDialog(null, warnings.toString());
+					}
+					else {
+
+						Input.createNewAccount(accountType, balance);
+					}
+
 				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
