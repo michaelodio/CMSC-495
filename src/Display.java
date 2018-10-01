@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 package proto2;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -210,10 +217,10 @@ public class Display extends JDialog {
     	    				if(accountType != "Savings") {
 
     	    				Input.createNewAccount(Input.username,accountType, transAmount);
-    	    				Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username));
+    	    				Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username)-1);
     	    				}else {
     	    					Input.createNewAccount(Input.username,accountType, transAmount);
-    	        				Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username));
+    	        				Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username)-1);
     	    				}
     				}
 
@@ -370,5 +377,7 @@ public class Display extends JDialog {
 	        */
 	    }
 	}
+
+
 
 
