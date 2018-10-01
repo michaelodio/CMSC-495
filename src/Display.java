@@ -194,6 +194,7 @@ public class Display extends JDialog {
     				JOptionPane.showMessageDialog(null, warnings.toString());
     			}
     			else {
+    				if(comboBox.getSelectedItem().toString() == "Deposit") {
     				if(accountType != "Savings") {
 
     				Input.createNewAccount(Input.username,accountType, transAmount);
@@ -204,8 +205,23 @@ public class Display extends JDialog {
     				}
 
     				}
+    				else {
+    					if(comboBox.getSelectedItem().toString() == "Withdraw") {
+    	    				if(accountType != "Savings") {
+
+    	    				Input.createNewAccount(Input.username,accountType, transAmount);
+    	    				Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username));
+    	    				}else {
+    	    					Input.createNewAccount(Input.username,accountType, transAmount);
+    	        				Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username));
+    	    				}
+    				}
+
+    				}
+
     				transactionAmount.setText(null);
 
+        	}
         	}
         });
         button.setActionCommand("OK");
@@ -354,7 +370,5 @@ public class Display extends JDialog {
 	        */
 	    }
 	}
-
-
 
 
