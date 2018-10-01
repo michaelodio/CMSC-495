@@ -5,7 +5,7 @@ import java.sql.SQLException;
 public class Database {
 
     Connection databaseConn;
-    String url = "jdbc:sqlite:Resources/group7.db";
+    String url = "jdbc:sqlite:group7.db";
 
     public Database(String url){
 
