@@ -140,12 +140,16 @@ public class Input extends JFrame {
 
 				StringBuilder warnings = new StringBuilder();
 
-				if(userNametextField_1.getText().isEmpty()) {
-					warnings.append("Username must not be empty\n");
+				if (userNametextField_1.getText().isEmpty()) {
+                warnings.append("Username must not be empty\n");
 
-				} else {
-					username = userNametextField_1.getText();
-			        }
+            }else if(uniqueUser(userNametextField_1.getText()) != true){
+
+            	warnings.append("Username already exists\n");
+            }
+            else {
+                username = userNametextField_1.getText();
+            }
 
 				if(passwordtextField_2.getText().isEmpty()) {
 					warnings.append("Password must not be empty\n");
@@ -268,6 +272,40 @@ public class Input extends JFrame {
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
+		    
+		    public boolean uniqueUser(String user) {
+    	Database database = new Database();
+        Connection dbConn = database.getConnection();
+        Statement stmt = null;
+        boolean foundUser = false;
+
+        try {
+            stmt = dbConn.createStatement();
+            ResultSet rs = stmt.executeQuery(
+                    "select USERNAME " +
+                            "FROM Users " +
+                            " WHERE USERNAME = " + user );
+            while (rs.next()){
+            	foundUser = rs.getBoolean(user);
+            }
+        } catch (SQLException e) {
+            System.out.println("------------------TableInsert-----------------");
+            System.out.println("Cannot insert into table: " + e);
+            System.out.println("--------------------------------------------------------");
+        } finally {
+            if (stmt != null) {
+                try {
+					stmt.close();
+					dbConn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        }
+        return foundUser;
+    }
+
 	        return false;
 	    }
 }
