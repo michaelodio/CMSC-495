@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -225,6 +228,7 @@ public class Input extends JFrame {
         btnRegister.addActionListener(e -> registerPanel.setVisible(true));
         btnRegister.setBounds(171, 150, 89, 23);
         contentPane.add(btnRegister);
+
     }
 
     public void createUserAccount() throws SQLException {
@@ -262,7 +266,7 @@ public class Input extends JFrame {
             ResultSet rs = stmt.executeQuery(
                     "select BALANCE " +
                             "FROM ACCOUNTS " +
-                            " WHERE ID = " + accountNumber );
+                            " WHERE ID =" + String.valueOf(accountNumber));
             while (rs.next()){
                 balance = rs.getDouble("BALANCE");
             }
@@ -280,7 +284,7 @@ public class Input extends JFrame {
     }
 
     //searches database for the desired account number and sets the balance to the given amount
-    public void setBalance(double balance, int accountNumber) throws SQLException {
+    public static void setBalance(double balance, int accountNumber) throws SQLException {
         Database database = new Database();
         Connection dbConn = database.getConnection();
 
@@ -290,12 +294,11 @@ public class Input extends JFrame {
             insertStmt = dbConn.createStatement();
             insertStmt.executeUpdate(
                     "UPDATE Accounts " +
-                            "SET balance = " +
-                            "values('" + balance + "')" +
-                            " WHERE ID = " + accountNumber );
+                            "SET balance = " + String.valueOf(balance) +
+                            " WHERE ID=" + String.valueOf(accountNumber));
         } catch (SQLException e) {
             System.out.println("------------------TableInsert-----------------");
-            System.out.println("Cannot insert into table: " + e);
+            System.out.println("Cannot insert into Accounts table (setBalance): Account Number: " + accountNumber + ", Balance: " + balance + " " + e);
             System.out.println("--------------------------------------------------------");
         } finally {
             if (insertStmt != null) {
@@ -303,5 +306,12 @@ public class Input extends JFrame {
             }
         }
     }
+
+    public void createTransaction(int accountNumber, double amount, String transactionType, String accountType) throws SQLException {
+
+        Transaction transaction = new Transaction(accountNumber, amount, transactionType, accountType);
+
+    }
+
 
 }

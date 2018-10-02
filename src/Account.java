@@ -132,7 +132,7 @@ public class Account {
                             "'" + balance + "')");
         } catch (SQLException e) {
             System.out.println("------------------TableInsert-----------------");
-            System.out.println("Cannot insert into table: " + e);
+            System.out.println("Cannot insert into Accounts table: " + e);
             System.out.println("--------------------------------------------------------");
         } finally {
             if (insertStmt != null) {
