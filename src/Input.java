@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -147,13 +148,19 @@ public class Input extends JFrame {
             if (userNametextField_1.getText().isEmpty()) {
                 warnings.append("Username must not be empty\n");
 
-            }else if(uniqueUser(userNametextField_1.getText()) != true){
+            } else
+				try {
+					if(uniqueUser(userNametextField_1.getText()) != false){
 
-            	warnings.append("Username already exists\n");
-            }
-            else {
-                username = userNametextField_1.getText();
-            }
+						warnings.append("Username already exists\n");
+					}
+					else {
+					    username = userNametextField_1.getText();
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
             if (passwordtextField_2.getText().isEmpty()) {
                 warnings.append("Password must not be empty\n");
@@ -263,38 +270,48 @@ public class Input extends JFrame {
         return false;
     }
 
-    public boolean uniqueUser(String user) {
+    public boolean uniqueUser(String user) throws SQLException {
     	Database database = new Database();
         Connection dbConn = database.getConnection();
         Statement stmt = null;
         boolean foundUser = false;
+        ArrayList<String> temp = new ArrayList<String>();
 
-        try {
-            stmt = dbConn.createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "select USERNAME " +
-                            "FROM Users " +
-                            " WHERE USERNAME = " + user );
-            while (rs.next()){
-            	foundUser = rs.getBoolean(user);
-            }
-        } catch (SQLException e) {
-            System.out.println("------------------TableInsert-----------------");
-            System.out.println("Cannot insert into table: " + e);
-            System.out.println("--------------------------------------------------------");
-        } finally {
-            if (stmt != null) {
-                try {
-					stmt.close();
-					dbConn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-        }
-        return foundUser;
+
+        	try {
+                String sql = "SELECT Username FROM Users WHERE USERNAME = ?";
+                PreparedStatement pst = dbConn.prepareStatement(sql);
+                pst.setString(1, user);
+                ResultSet rs = pst.executeQuery();
+
+                while (rs.next()){
+
+                	temp.add(rs.getString("USERNAME"));
+                	}
+
+                if(temp.contains(user)) {
+                	foundUser = true;
+                }
+
+
+
+        	}catch (SQLException e) {
+                    System.out.println("------------------TableInsert-----------------");
+                    System.out.println("Cannot insert into table2: " + e);
+                    System.out.println("--------------------------------------------------------");
+                } finally {
+                    if (stmt != null) {
+                        stmt.close();
+                        dbConn.close();
+                    }
+                }
+                return foundUser;
+
     }
+
+
+
+
 
   //searches the database for an account number and returns the balance
     public static double getBalance(int accountNumber) throws SQLException {
@@ -357,6 +374,10 @@ public class Input extends JFrame {
 
 
 }
+
+
+
+
 
 
 
