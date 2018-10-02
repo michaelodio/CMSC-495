@@ -1,3 +1,6 @@
+
+
+
 package proto2;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -195,46 +198,44 @@ public class Display extends JDialog {
     			}
     			else {
     				if(comboBox.getSelectedItem().toString() == "Deposit") {
-    				if(accountType != "Savings") {
 
-                    if(getAccountNumChecking(Input.username)<=0) {
+    					if(accountType == "Checking") {
 
-                    	Input.createNewAccount(Input.username,accountType, transAmount);
-                    } else {
-                    	Transaction.depositFunds(transAmount,getAccountNumChecking(Input.username));
-                    }
-
-
-
-    				}else  {
+    							if(getAccountNumChecking(Input.username)<=0) {
+    								Input.createNewAccount(Input.username,accountType, transAmount);
+    							} else {
+    								Transaction.depositFunds(transAmount,getAccountNumChecking(Input.username));
+    							}
+    					}
+    				if(accountType == "Savings") {
     					if(getAccountNumSavings(Input.username)<=0) {
     						Input.createNewAccount(Input.username,accountType, transAmount);
-
-
                         }else {
         				Transaction.depositFunds(transAmount,getAccountNumSavings(Input.username));
                         }
     				}
-
     				}
-    				else {
+
+
+
     					if(comboBox.getSelectedItem().toString() == "Withdraw") {
-    	    				if(accountType != "Savings") {
-
-
+    	    				if(accountType == "Checking") {
     	    				Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username));
 
-    	    				}else {
-
+    	    				}
+    	    				if(accountType == "Savings") {
     	        				Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username));
     	    				}
     				}
+    			}
 
-    				}
+
 
     				transactionAmount.setText(null);
 
-        	}
+
+
+
         	}
         });
         button.setActionCommand("OK");
@@ -245,14 +246,25 @@ public class Display extends JDialog {
 			public void actionPerformed(ActionEvent e) {
         		detailsPannel.setVisible(true);
 
-        		/* JLabel curChkActBal = new JLabel("");
+        		JLabel curChkActBal = new JLabel("");
         	        curChkActBal.setBounds(301, 52, 46, 14);
         	        detailsPannel.add(curChkActBal);
-        	        curChkActBal
+        	        try {
+						curChkActBal.setText(Double.toString(Input.getBalance(getAccountNumChecking(Input.username))));
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
         	        JLabel lblSavActBal = new JLabel("");
         	        lblSavActBal.setBounds(312, 188, 46, 14);
-        	        detailsPannel.add(lblSavActBal);*/
+        	        detailsPannel.add(lblSavActBal);
+        	        try {
+        	        	lblSavActBal.setText(Double.toString(Input.getBalance(getAccountNumSavings(Input.username))));
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
         	}
         });
         btnNewButton.setBounds(67, 91, 135, 23);
@@ -262,7 +274,7 @@ public class Display extends JDialog {
 
        @SuppressWarnings("unchecked")
 	public int getAccountNumChecking(String user) {
-    	   ArrayList num = new ArrayList();
+    	   ArrayList<Integer> num = new ArrayList<Integer>();
 
     	   Database database = new Database();
            Connection dbConn = database.getConnection();
@@ -303,7 +315,7 @@ public class Display extends JDialog {
         	   return nothing;
            }else {
 
-		return  largest = (int) Collections.max(num);
+		return  largest = Collections.max(num);
            }
 
 
@@ -312,25 +324,24 @@ public class Display extends JDialog {
        }
 
        public int getAccountNumSavings(String user) {
-    	   ArrayList num = new ArrayList();
+    	   ArrayList<Integer> num = new ArrayList<Integer>();
 
     	   Database database = new Database();
            Connection dbConn = database.getConnection();
            Statement stmt = null;
-           int nothing =0;
+           int nothing = 0;
 
            int largest;
-
-
 
            try {
                String sql = "SELECT ID FROM ACCOUNTS WHERE USERNAME = ? AND ACCOUNTTYPE = ?";
                PreparedStatement pst = dbConn.prepareStatement(sql);
                pst.setString(1, user);
-               pst.setString(1, "Savings");
+               pst.setString(2,"Savings");
                ResultSet rs = pst.executeQuery();
 
                while (rs.next()){
+
                	num.add(rs.getInt("ID"));
                }
 
@@ -350,13 +361,13 @@ public class Display extends JDialog {
    				}
                }
            }
-
            if(num.isEmpty()) {
         	   return nothing;
            }else {
 
-		return  largest = (int) Collections.max(num);
+		return  largest = Collections.max(num);
            }
+
 
 
 
