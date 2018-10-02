@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 package proto2;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -149,26 +142,26 @@ public class Display extends JDialog {
         label_7.setBounds(157, 88, 0, 0);
         detailsPannel.add(label_7);
 
-        JLabel label_8 = new JLabel("New label");
-        label_8.setBounds(301, 52, 46, 14);
-        detailsPannel.add(label_8);
+        JLabel curChkActBal = new JLabel("");
+        curChkActBal.setBounds(301, 52, 46, 14);
+        detailsPannel.add(curChkActBal);
 
         JLabel lblSavingsAccountDetails = new JLabel("Savings Account Details");
         lblSavingsAccountDetails.setBounds(78, 139, 195, 20);
         lblSavingsAccountDetails.setFont(new Font("Tahoma", Font.BOLD, 16));
         detailsPannel.add(lblSavingsAccountDetails);
 
-        JLabel label_9 = new JLabel("New label");
-        label_9.setBounds(301, 74, 46, 14);
-        detailsPannel.add(label_9);
+        JLabel chkIntEarned = new JLabel("");
+        chkIntEarned.setBounds(301, 74, 46, 14);
+        detailsPannel.add(chkIntEarned);
 
-        JLabel label_10 = new JLabel("New label");
-        label_10.setBounds(312, 188, 46, 14);
-        detailsPannel.add(label_10);
+        JLabel lblSavActBal = new JLabel("");
+        lblSavActBal.setBounds(312, 188, 46, 14);
+        detailsPannel.add(lblSavActBal);
 
-        JLabel label_1 = new JLabel("New label");
-        label_1.setBounds(310, 213, 46, 14);
-        detailsPannel.add(label_1);
+        JLabel savIntEarnedlbl = new JLabel("");
+        savIntEarnedlbl.setBounds(310, 213, 46, 14);
+        detailsPannel.add(savIntEarnedlbl);
 
         JButton button = new JButton("OK");
         button.setBounds(247, 89, 47, 23);
@@ -184,7 +177,7 @@ public class Display extends JDialog {
     				warnings.append("Transaction amount must not be empty\n");
     			} else {
     				try {
-    					transAmount = Integer.parseInt(transactionAmount.getText());
+    					transAmount = Double.parseDouble(transactionAmount.getText());
     				}catch(NumberFormatException ex) {
     					warnings.append("Balance must be a number");
     				}
@@ -204,11 +197,23 @@ public class Display extends JDialog {
     				if(comboBox.getSelectedItem().toString() == "Deposit") {
     				if(accountType != "Savings") {
 
-    				Input.createNewAccount(Input.username,accountType, transAmount);
-    				Transaction.depositFunds(transAmount,getAccountNumChecking(Input.username));
-    				}else {
-    					Input.createNewAccount(Input.username,accountType, transAmount);
+                    if(getAccountNumChecking(Input.username)<=0) {
+
+                    	Input.createNewAccount(Input.username,accountType, transAmount);
+                    } else {
+                    	Transaction.depositFunds(transAmount,getAccountNumChecking(Input.username));
+                    }
+
+
+
+    				}else  {
+    					if(getAccountNumSavings(Input.username)<=0) {
+    						Input.createNewAccount(Input.username,accountType, transAmount);
+
+
+                        }else {
         				Transaction.depositFunds(transAmount,getAccountNumSavings(Input.username));
+                        }
     				}
 
     				}
@@ -216,11 +221,12 @@ public class Display extends JDialog {
     					if(comboBox.getSelectedItem().toString() == "Withdraw") {
     	    				if(accountType != "Savings") {
 
-    	    				Input.createNewAccount(Input.username,accountType, transAmount);
-    	    				Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username)-1);
+
+    	    				Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username));
+
     	    				}else {
-    	    					Input.createNewAccount(Input.username,accountType, transAmount);
-    	        				Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username)-1);
+
+    	        				Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username));
     	    				}
     				}
 
@@ -238,6 +244,15 @@ public class Display extends JDialog {
         	@Override
 			public void actionPerformed(ActionEvent e) {
         		detailsPannel.setVisible(true);
+
+        		/* JLabel curChkActBal = new JLabel("");
+        	        curChkActBal.setBounds(301, 52, 46, 14);
+        	        detailsPannel.add(curChkActBal);
+        	        curChkActBal
+
+        	        JLabel lblSavActBal = new JLabel("");
+        	        lblSavActBal.setBounds(312, 188, 46, 14);
+        	        detailsPannel.add(lblSavActBal);*/
         	}
         });
         btnNewButton.setBounds(67, 91, 135, 23);
@@ -252,6 +267,7 @@ public class Display extends JDialog {
     	   Database database = new Database();
            Connection dbConn = database.getConnection();
            Statement stmt = null;
+           int nothing = 0;
 
            int largest;
 
@@ -263,6 +279,7 @@ public class Display extends JDialog {
                ResultSet rs = pst.executeQuery();
 
                while (rs.next()){
+
                	num.add(rs.getInt("ID"));
                }
 
@@ -282,8 +299,12 @@ public class Display extends JDialog {
    				}
                }
            }
+           if(num.isEmpty()) {
+        	   return nothing;
+           }else {
 
 		return  largest = (int) Collections.max(num);
+           }
 
 
 
@@ -296,6 +317,7 @@ public class Display extends JDialog {
     	   Database database = new Database();
            Connection dbConn = database.getConnection();
            Statement stmt = null;
+           int nothing =0;
 
            int largest;
 
@@ -329,7 +351,13 @@ public class Display extends JDialog {
                }
            }
 
+           if(num.isEmpty()) {
+        	   return nothing;
+           }else {
+
 		return  largest = (int) Collections.max(num);
+           }
+
 
 
 
@@ -377,7 +405,5 @@ public class Display extends JDialog {
 	        */
 	    }
 	}
-
-
 
 
