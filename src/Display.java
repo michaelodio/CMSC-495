@@ -1,4 +1,5 @@
 
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -127,7 +128,7 @@ public class Display extends JDialog {
 
 			}
 		});
-		savTrans.setBounds(154, 238, 125, 23);
+		savTrans.setBounds(108, 238, 202, 23);
 		detailsPannel.add(savTrans);
 
 		JLabel label_4 = new JLabel("Savings Account Balance:");
@@ -157,7 +158,7 @@ public class Display extends JDialog {
 
 			}
 		});
-		chkTrans.setBounds(154, 99, 125, 23);
+		chkTrans.setBounds(108, 99, 202, 23);
 		detailsPannel.add(chkTrans);
 
 		JLabel label_7 = new JLabel("");
@@ -457,7 +458,7 @@ public class Display extends JDialog {
 
 	}
 
-	
+
 
 	public DefaultTableModel buildTableModelChecking()throws SQLException {
 		Database database = new Database();
@@ -554,3 +555,4 @@ public class Display extends JDialog {
 			  e1.printStackTrace(); }
 	}
 }
+
