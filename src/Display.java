@@ -1,4 +1,4 @@
-
+package proto2;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -39,12 +40,15 @@ public class Display extends JDialog {
 	private JScrollPane jScrollPane1;
 	JLabel curChkActBal = new JLabel("");
 	JLabel lblSavActBal = new JLabel("");
+	Date d1 = new Date();
+
+
 
 
 	public Display() {
 
 
-		setTitle("G7 Bank");
+		setTitle("G7 Bank          " +d1.toString());
 		setBounds(100, 100, 474, 509);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
