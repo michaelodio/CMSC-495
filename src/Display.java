@@ -42,13 +42,9 @@ public class Display extends JDialog {
 	JLabel lblSavActBal = new JLabel("");
 	Date d1 = new Date();
 
-
-
-
 	public Display() {
 
-
-		setTitle("G7 Bank          " +d1.toString());
+		setTitle("G7 Bank          " + d1.toString());
 		setBounds(100, 100, 474, 509);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -152,12 +148,14 @@ public class Display extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JTable table = new JTable(buildTableModelChecking());
-					JOptionPane.showMessageDialog(null, new JScrollPane(table));
+					JOptionPane.showMessageDialog(null, new JScrollPane(table),
+							getuserFirstName() + " " + getuserLastName() + "'s"
+									+ " Checking Account Transaction History",
+							JOptionPane.INFORMATION_MESSAGE);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
 
 			}
 		});
@@ -168,10 +166,8 @@ public class Display extends JDialog {
 		label_7.setBounds(157, 88, 0, 0);
 		detailsPannel.add(label_7);
 
-
-
-		 lblSavActBal.setBounds(312, 188, 97, 14);
-		  detailsPannel.add(lblSavActBal);
+		lblSavActBal.setBounds(312, 188, 97, 14);
+		detailsPannel.add(lblSavActBal);
 
 		JLabel lblSavingsAccountDetails = new JLabel("Savings Account Details");
 		lblSavingsAccountDetails.setBounds(131, 139, 195, 20);
@@ -184,8 +180,6 @@ public class Display extends JDialog {
 		JLabel chkIntEarned = new JLabel("");
 		chkIntEarned.setBounds(301, 74, 46, 14);
 		detailsPannel.add(chkIntEarned);
-
-
 
 		JLabel savIntEarnedlbl = new JLabel("");
 		savIntEarnedlbl.setBounds(310, 213, 46, 14);
@@ -225,20 +219,27 @@ public class Display extends JDialog {
 						if (accountType == "Checking") {
 
 							try {
-								Input.createTransaction(
-										getUserAccountNum(Input.username),
+								Input.createTransaction(				getUserAccountNum(Input.username),
 										transAmount, "Deposit", accountType);
 
-								if(getAccountNumChecking(Input.username)<=0) {
-    								Input.createNewAccount(Input.username,accountType, transAmount);
-    							} else {
-    								Transaction.depositFunds(transAmount,getAccountNumChecking(Input.username));
-    							}
-								 try {
-									  curChkActBal.setText("$"+Double.toString(Input.getBalance(
-									  getAccountNumChecking(Input.username)))); } catch
-									  (SQLException e1) { // TODO Auto-generated catch block
-									  e1.printStackTrace(); }
+								if (getAccountNumChecking(Input.username) <= 0) {
+									Input.createNewAccount(Input.username,
+											accountType, transAmount);
+								} else {
+									Transaction.depositFunds(transAmount,
+											getAccountNumChecking(
+													Input.username));
+								}
+								try {
+									curChkActBal.setText("$"
+											+ Double.toString(Input.getBalance(
+													getAccountNumChecking(
+															Input.username))));
+								} catch (SQLException e1) { // TODO
+															// Auto-generated
+															// catch block
+									e1.printStackTrace();
+								}
 
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
@@ -250,16 +251,24 @@ public class Display extends JDialog {
 								Input.createTransaction(
 										getUserAccountNum(Input.username),
 										transAmount, "Deposit", accountType);
-								if(getAccountNumSavings(Input.username)<=0) {
-		    						Input.createNewAccount(Input.username,accountType, transAmount);
-		                        }else {
-		        				Transaction.depositFunds(transAmount,getAccountNumSavings(Input.username));
-		                        }
-								 try {
-									  lblSavActBal.setText("$"+Double.toString(Input.getBalance(
-									  getAccountNumSavings(Input.username)))); } catch
-									  (SQLException e1) { // TODO Auto-generated catch block
-									  e1.printStackTrace(); }
+								if (getAccountNumSavings(Input.username) <= 0) {
+									Input.createNewAccount(Input.username,
+											accountType, transAmount);
+								} else {
+									Transaction.depositFunds(transAmount,
+											getAccountNumSavings(
+													Input.username));
+								}
+								try {
+									lblSavActBal.setText("$"
+											+ Double.toString(Input.getBalance(
+													getAccountNumSavings(
+															Input.username))));
+								} catch (SQLException e1) { // TODO
+															// Auto-generated
+															// catch block
+									e1.printStackTrace();
+								}
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -270,24 +279,31 @@ public class Display extends JDialog {
 					if (comboBox.getSelectedItem().toString() == "Withdraw") {
 						if (accountType == "Checking") {
 							try {
-								Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username));
+								Transaction.withdrawFunds(transAmount,
+										getAccountNumChecking(Input.username));
 
-								if(Transaction.noFunds == false) {
+								if (Transaction.noFunds == false) {
 
-								Input.createTransaction(
-										getUserAccountNum(Input.username),
-										transAmount, "Withdraw", accountType);
+									Input.createTransaction(
+											getUserAccountNum(Input.username),
+											transAmount, "Withdraw",
+											accountType);
 								}
-								if(Transaction.noFunds == true) {
-									JOptionPane.showMessageDialog(null, "Insufficient Funds");
+								if (Transaction.noFunds == true) {
+									JOptionPane.showMessageDialog(null,
+											"Insufficient Funds");
 								}
-
 
 								try {
-									  curChkActBal.setText("$"+Double.toString(Input.getBalance(
-									  getAccountNumChecking(Input.username)))); } catch
-									  (SQLException e1) { // TODO Auto-generated catch block
-									  e1.printStackTrace(); }
+									curChkActBal.setText("$"
+											+ Double.toString(Input.getBalance(
+													getAccountNumChecking(
+															Input.username))));
+								} catch (SQLException e1) { // TODO
+															// Auto-generated
+															// catch block
+									e1.printStackTrace();
+								}
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -296,21 +312,29 @@ public class Display extends JDialog {
 						}
 						if (accountType == "Savings") {
 							try {
-								Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username));
-								if(Transaction.noFunds == false) {
-								Input.createTransaction(
-										getUserAccountNum(Input.username),
-										transAmount, "Withdraw", accountType);
+								Transaction.withdrawFunds(transAmount,
+										getAccountNumSavings(Input.username));
+								if (Transaction.noFunds == false) {
+									Input.createTransaction(
+											getUserAccountNum(Input.username),
+											transAmount, "Withdraw",
+											accountType);
 
 								}
-								if(Transaction.noFunds == true) {
-									JOptionPane.showMessageDialog(null, "Insufficient Funds");
+								if (Transaction.noFunds == true) {
+									JOptionPane.showMessageDialog(null,
+											"Insufficient Funds");
 								}
 								try {
-									  lblSavActBal.setText("$"+Double.toString(Input.getBalance(
-									  getAccountNumSavings(Input.username)))); } catch
-									  (SQLException e1) { // TODO Auto-generated catch block
-									  e1.printStackTrace(); }
+									lblSavActBal.setText("$"
+											+ Double.toString(Input.getBalance(
+													getAccountNumSavings(
+															Input.username))));
+								} catch (SQLException e1) { // TODO
+															// Auto-generated
+															// catch block
+									e1.printStackTrace();
+								}
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -340,8 +364,7 @@ public class Display extends JDialog {
 	}
 
 	@SuppressWarnings("unchecked")
-	public int getUserAccountNum(String user) {
-
+	public int getUserAccountNum(String user) throws SQLException {
 		Database database = new Database();
 		Connection dbConn = database.getConnection();
 		Statement stmt = null;
@@ -366,22 +389,15 @@ public class Display extends JDialog {
 			System.out.println(
 					"--------------------------------------------------------");
 		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-					dbConn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+
+			dbConn.close();
+
 		}
 		return iD;
 	}
 
-	public int getAccountNumSavings(String user) {
+	public int getAccountNumSavings(String user) throws SQLException {
 		ArrayList<Integer> num = new ArrayList<Integer>();
-
 		Database database = new Database();
 		Connection dbConn = database.getConnection();
 		Statement stmt = null;
@@ -408,15 +424,9 @@ public class Display extends JDialog {
 			System.out.println(
 					"--------------------------------------------------------");
 		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-					dbConn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+
+			dbConn.close();
+
 		}
 		if (num.isEmpty()) {
 			return nothing;
@@ -427,12 +437,12 @@ public class Display extends JDialog {
 
 	}
 
-	public int getAccountNumChecking(String user) {
+	public int getAccountNumChecking(String user) throws SQLException {
 		ArrayList<Integer> num = new ArrayList<Integer>();
 
 		Database database = new Database();
 		Connection dbConn = database.getConnection();
-		Statement stmt = null;
+
 		int nothing = 0;
 
 		int largest;
@@ -456,16 +466,10 @@ public class Display extends JDialog {
 			System.out.println(
 					"--------------------------------------------------------");
 		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-					dbConn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+
+			dbConn.close();
 		}
+
 		if (num.isEmpty()) {
 			return nothing;
 		} else {
@@ -475,100 +479,140 @@ public class Display extends JDialog {
 
 	}
 
-
-
-	public DefaultTableModel buildTableModelChecking()throws SQLException {
+	public DefaultTableModel buildTableModelChecking() throws SQLException {
 		Database database = new Database();
-        Connection dbConn = database.getConnection();
-        ResultSet rs = null;
-        ResultSetMetaData metaData =null;
-        Vector<String> columnNames = new Vector<String>();
-        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-
+		Connection dbConn = database.getConnection();
+		ResultSet rs = null;
+		ResultSetMetaData metaData = null;
+		Vector<String> columnNames = new Vector<String>();
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 
 		try {
-            String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
-            PreparedStatement pst = dbConn.prepareStatement(sql);
-            pst.setInt(1, getUserAccountNum(Input.username));
-            pst.setString(2, "Checking");
-            rs = pst.executeQuery();
-            metaData = rs.getMetaData();
+			String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
+			PreparedStatement pst = dbConn.prepareStatement(sql);
+			pst.setInt(1, getUserAccountNum(Input.username));
+			pst.setString(2, "Checking");
+			rs = pst.executeQuery();
+			metaData = rs.getMetaData();
 
-    		int columnCount = metaData.getColumnCount();
-    		for (int column = 1; column <= columnCount; column++) {
-    			columnNames.add(metaData.getColumnName(column));
-    		}
+			int columnCount = metaData.getColumnCount();
+			for (int column = 1; column <= columnCount; column++) {
+				columnNames.add(metaData.getColumnName(column));
+			}
 
+			while (rs.next()) {
+				Vector<Object> vector = new Vector<Object>();
+				for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+					vector.add(rs.getObject(columnIndex));
+				}
+				data.add(vector);
+			}
 
-    		while (rs.next()) {
-    			Vector<Object> vector = new Vector<Object>();
-    			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-    				vector.add(rs.getObject(columnIndex));
-    			}
-    			data.add(vector);
-    		}
-
-    	}catch (SQLException e) {
-            e.printStackTrace();
-        }
+		} finally {
+			dbConn.close();
+		}
 
 		return new DefaultTableModel(data, columnNames);
 
-
-
 	}
 
-
-	public DefaultTableModel buildTableModelSavings()throws SQLException {
+	public String getuserFirstName() throws SQLException {
 		Database database = new Database();
-        Connection dbConn = database.getConnection();
-        ResultSet rs = null;
-        ResultSetMetaData metaData =null;
-        Vector<String> columnNames = new Vector<String>();
-        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-
+		Connection dbConn = database.getConnection();
+		ResultSet rs = null;
+		String first = "";
 
 		try {
-            String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
-            PreparedStatement pst = dbConn.prepareStatement(sql);
-            pst.setInt(1, getUserAccountNum(Input.username));
-            pst.setString(2, "Savings");
-            rs = pst.executeQuery();
-            metaData = rs.getMetaData();
+			String sql = "SELECT fname FROM Users WHERE Username = ? ";
+			PreparedStatement pst = dbConn.prepareStatement(sql);
+			pst.setString(1, Input.username);
+			rs = pst.executeQuery();
 
-    		int columnCount = metaData.getColumnCount();
-    		for (int column = 1; column <= columnCount; column++) {
-    			columnNames.add(metaData.getColumnName(column));
-    		}
+			while (rs.next()) {
+				first = rs.getString("fname");
+			}
 
+		} finally {
+			dbConn.close();
+		}
 
-    		while (rs.next()) {
-    			Vector<Object> vector = new Vector<Object>();
-    			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-    				vector.add(rs.getObject(columnIndex));
-    			}
-    			data.add(vector);
-    		}
+		return first;
+	}
 
-    	}catch (SQLException e) {
-            e.printStackTrace();
-        }
+	public String getuserLastName() throws SQLException {
+		Database database = new Database();
+		Connection dbConn = database.getConnection();
+		ResultSet rs = null;
+		PreparedStatement pst = null;
+		String last = "";
+
+		try {
+			String sql = "SELECT lname FROM Users WHERE Username = ? ";
+			pst = dbConn.prepareStatement(sql);
+			pst.setString(1, Input.username);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				last = rs.getString("lname");
+			}
+
+		} finally {
+			dbConn.close();
+		}
+
+		return last;
+	}
+
+	public DefaultTableModel buildTableModelSavings() throws SQLException {
+		Database database = new Database();
+		Connection dbConn = database.getConnection();
+		ResultSet rs = null;
+		ResultSetMetaData metaData = null;
+		Vector<String> columnNames = new Vector<String>();
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+
+		try {
+			String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
+			PreparedStatement pst = dbConn.prepareStatement(sql);
+			pst.setInt(1, getUserAccountNum(Input.username));
+			pst.setString(2, "Savings");
+			rs = pst.executeQuery();
+			metaData = rs.getMetaData();
+
+			int columnCount = metaData.getColumnCount();
+			for (int column = 1; column <= columnCount; column++) {
+				columnNames.add(metaData.getColumnName(column));
+			}
+
+			while (rs.next()) {
+				Vector<Object> vector = new Vector<Object>();
+				for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+					vector.add(rs.getObject(columnIndex));
+				}
+				data.add(vector);
+			}
+
+		} finally {
+			dbConn.close();
+		}
 
 		return new DefaultTableModel(data, columnNames);
 
 	}
 
 	public void displayBalance() {
-		 try {
-			  curChkActBal.setText("$"+Double.toString(Input.getBalance(
-			  getAccountNumChecking(Input.username)))); } catch
-			  (SQLException e1) { // TODO Auto-generated catch block
-			  e1.printStackTrace(); }
+		try {
+			curChkActBal.setText("$" + Double.toString(
+					Input.getBalance(getAccountNumChecking(Input.username))));
+		} catch (SQLException e1) { // TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
-			  try {
-			  lblSavActBal.setText("$"+Double.toString(Input.getBalance(
-			  getAccountNumSavings(Input.username)))); } catch
-			  (SQLException e1) { // TODO Auto-generated catch block
-			  e1.printStackTrace(); }
+		try {
+			lblSavActBal.setText("$" + Double.toString(
+					Input.getBalance(getAccountNumSavings(Input.username))));
+		} catch (SQLException e1) { // TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
