@@ -1,5 +1,4 @@
-
-
+package proto2;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -267,10 +266,18 @@ public class Display extends JDialog {
 					if (comboBox.getSelectedItem().toString() == "Withdraw") {
 						if (accountType == "Checking") {
 							try {
+								Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username));
+
+								if(Transaction.noFunds == false) {
+
 								Input.createTransaction(
 										getUserAccountNum(Input.username),
 										transAmount, "Withdraw", accountType);
-								Transaction.withdrawFunds(transAmount,getAccountNumChecking(Input.username));
+								}
+								if(Transaction.noFunds == true) {
+									JOptionPane.showMessageDialog(null, "Insufficient Funds");
+								}
+
 
 								try {
 									  curChkActBal.setText("$"+Double.toString(Input.getBalance(
@@ -285,10 +292,16 @@ public class Display extends JDialog {
 						}
 						if (accountType == "Savings") {
 							try {
+								Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username));
+								if(Transaction.noFunds == false) {
 								Input.createTransaction(
 										getUserAccountNum(Input.username),
 										transAmount, "Withdraw", accountType);
-								Transaction.withdrawFunds(transAmount,getAccountNumSavings(Input.username));
+
+								}
+								if(Transaction.noFunds == true) {
+									JOptionPane.showMessageDialog(null, "Insufficient Funds");
+								}
 								try {
 									  lblSavActBal.setText("$"+Double.toString(Input.getBalance(
 									  getAccountNumSavings(Input.username)))); } catch
@@ -555,4 +568,3 @@ public class Display extends JDialog {
 			  e1.printStackTrace(); }
 	}
 }
-
