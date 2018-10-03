@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class Transaction {
 
+	public static boolean noFunds = false;
 
 
 
@@ -107,6 +108,7 @@ public class Transaction {
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        } catch (IllegalArgumentException e) {
+	        	noFunds = true;
 	           System.out.println("Insufficient Funds");
 	        }
 	    }
