@@ -119,7 +119,10 @@ public class Display extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JTable table = new JTable(buildTableModelSavings());
-					JOptionPane.showMessageDialog(null, new JScrollPane(table));
+					JOptionPane.showMessageDialog(null, new JScrollPane(table),
+							Input.username + "'s"
+									+ " Savings Account Transaction History",
+							JOptionPane.INFORMATION_MESSAGE);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -149,7 +152,7 @@ public class Display extends JDialog {
 				try {
 					JTable table = new JTable(buildTableModelChecking());
 					JOptionPane.showMessageDialog(null, new JScrollPane(table),
-							getuserFirstName() + " " + getuserLastName() + "'s"
+							Input.username + "'s"
 									+ " Checking Account Transaction History",
 							JOptionPane.INFORMATION_MESSAGE);
 				} catch (SQLException e1) {
@@ -516,52 +519,6 @@ public class Display extends JDialog {
 
 	}
 
-	public String getuserFirstName() throws SQLException {
-		Database database = new Database();
-		Connection dbConn = database.getConnection();
-		ResultSet rs = null;
-		String first = "";
-
-		try {
-			String sql = "SELECT fname FROM Users WHERE Username = ? ";
-			PreparedStatement pst = dbConn.prepareStatement(sql);
-			pst.setString(1, Input.username);
-			rs = pst.executeQuery();
-
-			while (rs.next()) {
-				first = rs.getString("fname");
-			}
-
-		} finally {
-			dbConn.close();
-		}
-
-		return first;
-	}
-
-	public String getuserLastName() throws SQLException {
-		Database database = new Database();
-		Connection dbConn = database.getConnection();
-		ResultSet rs = null;
-		PreparedStatement pst = null;
-		String last = "";
-
-		try {
-			String sql = "SELECT lname FROM Users WHERE Username = ? ";
-			pst = dbConn.prepareStatement(sql);
-			pst.setString(1, Input.username);
-			rs = pst.executeQuery();
-
-			while (rs.next()) {
-				last = rs.getString("lname");
-			}
-
-		} finally {
-			dbConn.close();
-		}
-
-		return last;
-	}
 
 	public DefaultTableModel buildTableModelSavings() throws SQLException {
 		Database database = new Database();
