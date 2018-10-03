@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -39,7 +38,7 @@ public class Input extends JFrame {
 	String emailAddress = "";
 	String fName = "";
 	String lName = "";
-	int phoneNum = 0;
+	long phoneNum = 0;
 	String accountType = "";
 
 	public Input() {
@@ -185,7 +184,10 @@ public class Input extends JFrame {
 				warnings.append("Phone number must not be empty\n");
 			} else {
 				try {
-					phoneNum = Integer.parseInt(phonetextField_6.getText());
+					String temp = phonetextField_6.getText();
+					String temp2 = temp.replaceAll("[()\\s-]+", "");
+					phoneNum = Long.parseLong(temp2);
+
 				} catch (NumberFormatException ex) {
 					warnings.append("Phone Number must be a number");
 				}
