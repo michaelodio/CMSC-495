@@ -241,6 +241,9 @@ public class Input extends JFrame {
 					ex.printStackTrace();
 				}
 			}
+			else {
+				JOptionPane.showMessageDialog(null, "Incorrect username or password");
+			}
 		});
 
 		btnLogin.setBounds(10, 150, 89, 23);
