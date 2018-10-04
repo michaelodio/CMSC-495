@@ -1,4 +1,6 @@
+package proto2;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -122,6 +125,7 @@ public class Display extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JTable table = new JTable(buildTableModelSavings());
+					UIManager.put("OptionPane.minimumSize",new Dimension(800,800));
 					JOptionPane.showMessageDialog(null, new JScrollPane(table),
 							Input.username + "'s"
 									+ " Savings Account Transaction History",
@@ -154,6 +158,7 @@ public class Display extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JTable table = new JTable(buildTableModelChecking());
+					UIManager.put("OptionPane.minimumSize",new Dimension(800,800));
 					JOptionPane.showMessageDialog(null, new JScrollPane(table),
 							Input.username + "'s"
 									+ " Checking Account Transaction History",
