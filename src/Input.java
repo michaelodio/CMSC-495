@@ -228,7 +228,12 @@ public class Input extends JFrame {
         btnRegister.setBounds(171, 150, 89, 23);
         contentPane.add(btnRegister);
 
+
+        //debug code
         try {
+            username = "jon";
+            createNewAccount("jon", 300);
+            Transaction transaction = new Transaction(3, 20, "Withdrawal", "Checking");
             HashMap<String,String> hashMap = getTransaction(3);
             System.out.println(hashMap.values());
 
