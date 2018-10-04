@@ -1,5 +1,8 @@
+package proto2;
+
 import java.awt.Font;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,14 +32,14 @@ public class Input extends JFrame {
 	private JTextField phonetextField_6;
 
 	static String username = "";
-
+	static String accountType = "";
+	static int accountNum = 0;
 
 	String password = "";
 	String emailAddress = "";
 	String fName = "";
 	String lName = "";
 	long phoneNum = 0;
-	String accountType = "";
 
 	public Input() {
 		setTitle("G7 Bank");
@@ -222,6 +225,13 @@ public class Input extends JFrame {
 			if (login(UserNameTextField.getText(), pw)) {
 
 				Input.username = UserNameTextField.getText();
+				try {
+					getAccountType();
+					getAccountNum(username);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				try {
 
@@ -269,7 +279,54 @@ public class Input extends JFrame {
 		return false;
 	}
 
+	public String getAccountType() throws SQLException {
+		Database database = new Database();
+		Connection dbConn = database.getConnection();
+		ResultSet rs = null;
 
+		try {
+			String sql = "SELECT ACCOUNTTYPE FROM ACCOUNTS WHERE USERNAME = ? ";
+			PreparedStatement pst = dbConn.prepareStatement(sql);
+			pst.setString(1, username);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+
+				accountType = rs.getString("ACCOUNTTYPE");
+			}
+		} finally {
+			dbConn.close();
+		}
+
+		return accountType;
+	}
+
+	public int getAccountNum(String user) throws SQLException {
+
+		Database database = new Database();
+		Connection dbConn = database.getConnection();
+
+		try {
+			String sql = "SELECT ID FROM ACCOUNTS WHERE USERNAME = ?";
+			PreparedStatement pst = dbConn.prepareStatement(sql);
+			pst.setString(1, user);
+
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+
+				accountNum = rs.getInt("ID");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			dbConn.close();
+		}
+
+		return accountNum;
+	}
 	// searches the database for an account number and returns the balance
 	public static double getBalance(int accountNumber) throws SQLException {
 		Database database = new Database();
@@ -338,6 +395,5 @@ public class Input extends JFrame {
 				transactionType, accountType);
 
 	}
-
 
 }
