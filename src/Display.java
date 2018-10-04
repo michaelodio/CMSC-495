@@ -124,7 +124,7 @@ public class Display extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JTable table = new JTable(buildTableModelSavings());
+					JTable table = new JTable(buildTableModel(actNumSav,"Savings"));
 					UIManager.put("OptionPane.minimumSize",new Dimension(800,800));
 					JOptionPane.showMessageDialog(null, new JScrollPane(table),
 							Input.username + "'s"
@@ -157,7 +157,7 @@ public class Display extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JTable table = new JTable(buildTableModelChecking());
+					JTable table = new JTable(buildTableModel(actNumChk,"Checking"));
 					UIManager.put("OptionPane.minimumSize",new Dimension(800,800));
 					JOptionPane.showMessageDialog(null, new JScrollPane(table),
 							Input.username + "'s"
@@ -460,7 +460,7 @@ public class Display extends JDialog {
 
 	}
 
-	public DefaultTableModel buildTableModelChecking() throws SQLException {
+	public DefaultTableModel buildTableModel(int actNumChk, String acct) throws SQLException {
 		Database database = new Database();
 		Connection dbConn = database.getConnection();
 		ResultSet rs = null;
@@ -472,7 +472,7 @@ public class Display extends JDialog {
 			String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
 			PreparedStatement pst = dbConn.prepareStatement(sql);
 			pst.setInt(1, actNumChk);
-			pst.setString(2, "Checking");
+			pst.setString(2, acct);
 			rs = pst.executeQuery();
 			metaData = rs.getMetaData();
 
@@ -497,43 +497,7 @@ public class Display extends JDialog {
 
 	}
 
-	public DefaultTableModel buildTableModelSavings() throws SQLException {
-		Database database = new Database();
-		Connection dbConn = database.getConnection();
-		ResultSet rs = null;
-		ResultSetMetaData metaData = null;
-		Vector<String> columnNames = new Vector<String>();
-		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-
-		try {
-			String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
-			PreparedStatement pst = dbConn.prepareStatement(sql);
-			pst.setInt(1, actNumSav);
-			pst.setString(2, "Savings");
-			rs = pst.executeQuery();
-			metaData = rs.getMetaData();
-
-			int columnCount = metaData.getColumnCount();
-			for (int column = 1; column <= columnCount; column++) {
-				columnNames.add(metaData.getColumnName(column));
-			}
-
-			while (rs.next()) {
-				Vector<Object> vector = new Vector<Object>();
-				for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-					vector.add(rs.getObject(columnIndex));
-				}
-				data.add(vector);
-			}
-
-		} finally {
-			dbConn.close();
-		}
-
-		return new DefaultTableModel(data, columnNames);
-
-	}
-
+	
 	//shows balances is no transactions have been made
 	public void displayBalance() {
 		try {
