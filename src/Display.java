@@ -1,4 +1,3 @@
-package proto2;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -35,6 +34,8 @@ public class Display extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	double transAmount = 0;
 	String accountType = "";
+	static int actNumChk = 0;
+	static int actNumSav = 0;
 	private JTextField transactionAmount;
 	private JTable accountTable;
 	private JScrollPane jScrollPane1;
@@ -42,7 +43,9 @@ public class Display extends JDialog {
 	JLabel lblSavActBal = new JLabel("");
 	Date d1 = new Date();
 
-	public Display() {
+	public Display() throws SQLException {
+		getAccountNumChecking(Input.username);
+		getAccountNumSavings(Input.username);
 
 		setTitle("G7 Bank          " + d1.toString());
 		setBounds(100, 100, 474, 509);
@@ -217,27 +220,37 @@ public class Display extends JDialog {
 				if (warnings.length() > 0) {
 					JOptionPane.showMessageDialog(null, warnings.toString());
 				} else {
+
+					// gets account numbers for already created accounts
+					try {
+						actNumChk = getAccountNumChecking(Input.username);
+						actNumSav = getAccountNumSavings(Input.username);
+					} catch (SQLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+
 					if (comboBox.getSelectedItem().toString() == "Deposit") {
 
 						if (accountType == "Checking") {
 
 							try {
-								Input.createTransaction(				getUserAccountNum(Input.username),
-										transAmount, "Deposit", accountType);
-
-								if (getAccountNumChecking(Input.username) <= 0) {
+								// if this type of account was not created it is
+								// created and it's account number is updated
+								// before making transaction
+								if (actNumChk == 0) {
 									Input.createNewAccount(Input.username,
-											accountType, transAmount);
-								} else {
-									Transaction.depositFunds(transAmount,
-											getAccountNumChecking(
-													Input.username));
+											accountType, 0);
+									actNumChk = getAccountNumChecking(
+											Input.username);
 								}
+
+								Input.createTransaction(actNumChk, transAmount,
+										"Deposit", accountType);
+
 								try {
-									curChkActBal.setText("$"
-											+ Double.toString(Input.getBalance(
-													getAccountNumChecking(
-															Input.username))));
+									curChkActBal.setText("$" + Double.toString(
+											Input.getBalance(actNumChk)));
 								} catch (SQLException e1) { // TODO
 															// Auto-generated
 															// catch block
@@ -251,22 +264,21 @@ public class Display extends JDialog {
 						}
 						if (accountType == "Savings") {
 							try {
-								Input.createTransaction(
-										getUserAccountNum(Input.username),
-										transAmount, "Deposit", accountType);
-								if (getAccountNumSavings(Input.username) <= 0) {
+								// if this type of account was not created it is
+								// created and it's account number is updated
+								// before making transaction
+								if (actNumSav == 0) {
 									Input.createNewAccount(Input.username,
-											accountType, transAmount);
-								} else {
-									Transaction.depositFunds(transAmount,
-											getAccountNumSavings(
-													Input.username));
+											accountType, 0);
+									actNumSav = getAccountNumSavings(
+											Input.username);
 								}
+								Input.createTransaction(actNumSav, transAmount,
+										"Deposit", accountType);
+
 								try {
-									lblSavActBal.setText("$"
-											+ Double.toString(Input.getBalance(
-													getAccountNumSavings(
-															Input.username))));
+									lblSavActBal.setText("$" + Double.toString(
+											Input.getBalance(actNumSav)));
 								} catch (SQLException e1) { // TODO
 															// Auto-generated
 															// catch block
@@ -282,14 +294,13 @@ public class Display extends JDialog {
 					if (comboBox.getSelectedItem().toString() == "Withdraw") {
 						if (accountType == "Checking") {
 							try {
-								Transaction.withdrawFunds(transAmount,
-										getAccountNumChecking(Input.username));
+								// Transaction.withdrawFunds(transAmount,
+								// actNumChk);
 
 								if (Transaction.noFunds == false) {
 
-									Input.createTransaction(
-											getUserAccountNum(Input.username),
-											transAmount, "Withdraw",
+									Input.createTransaction(actNumChk,
+											transAmount, "Withdrawal",
 											accountType);
 								}
 								if (Transaction.noFunds == true) {
@@ -298,10 +309,8 @@ public class Display extends JDialog {
 								}
 
 								try {
-									curChkActBal.setText("$"
-											+ Double.toString(Input.getBalance(
-													getAccountNumChecking(
-															Input.username))));
+									curChkActBal.setText("$" + Double.toString(
+											Input.getBalance(actNumChk)));
 								} catch (SQLException e1) { // TODO
 															// Auto-generated
 															// catch block
@@ -315,12 +324,11 @@ public class Display extends JDialog {
 						}
 						if (accountType == "Savings") {
 							try {
-								Transaction.withdrawFunds(transAmount,
-										getAccountNumSavings(Input.username));
+								// Transaction.withdrawFunds(transAmount,
+								// actNumSav);
 								if (Transaction.noFunds == false) {
-									Input.createTransaction(
-											getUserAccountNum(Input.username),
-											transAmount, "Withdraw",
+									Input.createTransaction(actNumSav,
+											transAmount, "Withdrawal",
 											accountType);
 
 								}
@@ -329,10 +337,8 @@ public class Display extends JDialog {
 											"Insufficient Funds");
 								}
 								try {
-									lblSavActBal.setText("$"
-											+ Double.toString(Input.getBalance(
-													getAccountNumSavings(
-															Input.username))));
+									lblSavActBal.setText("$" + Double.toString(
+											Input.getBalance(actNumSav)));
 								} catch (SQLException e1) { // TODO
 															// Auto-generated
 															// catch block
@@ -364,39 +370,6 @@ public class Display extends JDialog {
 		});
 		btnNewButton.setBounds(87, 89, 163, 23);
 		contentPanel.add(btnNewButton);
-	}
-
-	@SuppressWarnings("unchecked")
-	public int getUserAccountNum(String user) throws SQLException {
-		Database database = new Database();
-		Connection dbConn = database.getConnection();
-		Statement stmt = null;
-		int iD = 0;
-
-		try {
-			String sql = "SELECT ID FROM USERS WHERE USERNAME = ?";
-			PreparedStatement pst = dbConn.prepareStatement(sql);
-			pst.setString(1, user);
-
-			ResultSet rs = pst.executeQuery();
-
-			while (rs.next()) {
-
-				iD = rs.getInt("ID");
-			}
-
-		} catch (SQLException e) {
-			System.out
-					.println("------------------TableInsert-----------------");
-			System.out.println("Cannot insert into table: " + e);
-			System.out.println(
-					"--------------------------------------------------------");
-		} finally {
-
-			dbConn.close();
-
-		}
-		return iD;
 	}
 
 	public int getAccountNumSavings(String user) throws SQLException {
@@ -493,7 +466,7 @@ public class Display extends JDialog {
 		try {
 			String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
 			PreparedStatement pst = dbConn.prepareStatement(sql);
-			pst.setInt(1, getUserAccountNum(Input.username));
+			pst.setInt(1, actNumChk);
 			pst.setString(2, "Checking");
 			rs = pst.executeQuery();
 			metaData = rs.getMetaData();
@@ -519,7 +492,6 @@ public class Display extends JDialog {
 
 	}
 
-
 	public DefaultTableModel buildTableModelSavings() throws SQLException {
 		Database database = new Database();
 		Connection dbConn = database.getConnection();
@@ -531,7 +503,7 @@ public class Display extends JDialog {
 		try {
 			String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ? AND ACCOUNT_TYPE = ? ";
 			PreparedStatement pst = dbConn.prepareStatement(sql);
-			pst.setInt(1, getUserAccountNum(Input.username));
+			pst.setInt(1, actNumSav);
 			pst.setString(2, "Savings");
 			rs = pst.executeQuery();
 			metaData = rs.getMetaData();
@@ -557,6 +529,7 @@ public class Display extends JDialog {
 
 	}
 
+	//shows balances is no transactions have been made
 	public void displayBalance() {
 		try {
 			curChkActBal.setText("$" + Double.toString(
