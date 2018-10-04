@@ -44,6 +44,7 @@ public class Transaction {
 	            if (createStmt != null) {
 	                createStmt.close();
 	            }
+
 	        }
 
 	        //adding transaction information
@@ -90,14 +91,14 @@ public class Transaction {
 	    }
 
 
-	    public static void depositFunds( double amount, int accountNumber){
+	    private void depositFunds( double amount, int accountNumber){
 	        try {
 	            Input.setBalance(Input.getBalance(accountNumber) + amount, accountNumber);
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
 	    }
-	    public static void withdrawFunds(double amount, int accountNumber){
+	    private void withdrawFunds(double amount, int accountNumber){
 	        try {
 	            if (Input.getBalance(accountNumber) >= amount){
 	                Input.setBalance(Input.getBalance(accountNumber) - amount, accountNumber);
@@ -119,4 +120,3 @@ public class Transaction {
 
 
 	}
-
