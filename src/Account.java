@@ -83,7 +83,6 @@ public class Account {
             }
         }
 
-
     }
 
     //this constructor creates checking or savings accounts for existing users
@@ -97,7 +96,6 @@ public class Account {
             e.printStackTrace();
         }
     }
-
 
     void createAccount(String username, String accountType, double balance) throws SQLException {
 
@@ -125,7 +123,6 @@ public class Account {
         }
 
         //adding account information
-
         Statement insertStmt = null;
         try {
             insertStmt = dbConn.createStatement();
@@ -135,31 +132,7 @@ public class Account {
                             "'" + balance + "')");
         } catch (SQLException e) {
             System.out.println("------------------TableInsert-----------------");
-            System.out.println("Cannot insert into table: " + e);
-            System.out.println("--------------------------------------------------------");
-        } finally {
-            if (insertStmt != null) {
-                insertStmt.close();
-            }
-        }
-
-
-    }
-
-    public void setBalance(double balance, int accountNumber) throws SQLException {
-        this.balance = balance;
-        Statement insertStmt = null;
-
-        try {
-            insertStmt = dbConn.createStatement();
-            insertStmt.executeUpdate(
-                    "UPDATE Accounts " +
-                            "SET balance = " +
-                            "values('" + balance + "')" +
-                            " WHERE ID = " + accountNumber );
-        } catch (SQLException e) {
-            System.out.println("------------------TableInsert-----------------");
-            System.out.println("Cannot insert into table: " + e);
+            System.out.println("Cannot insert into Accounts table: " + e);
             System.out.println("--------------------------------------------------------");
         } finally {
             if (insertStmt != null) {
@@ -169,12 +142,4 @@ public class Account {
     }
 
 
-
-    /*public String getAccountType() {
-        return this.accountType;
-    }
-
-    public double getBalance() {
-        return this.balance;
-    }*/
 }
