@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -33,6 +34,7 @@ public class Input extends JFrame {
 	private JTextField phonetextField_6;
 
 	static String username = "";
+	static int userActNum = 0;
 
 	String password = "";
 	String emailAddress = "";
@@ -40,6 +42,7 @@ public class Input extends JFrame {
 	String lName = "";
 	long phoneNum = 0;
 	String accountType = "";
+
 
 	public Input() {
 		setTitle("G7 Bank");
@@ -205,6 +208,8 @@ public class Input extends JFrame {
 
 				try {
 					createUserAccount();
+					createNewAccount(Input.username,
+							accountType, 0);
 					JOptionPane.showMessageDialog(null,
 							"Account Created! Please Login with your Username and Password!");
 					registerPanel.setVisible(false);
@@ -231,6 +236,12 @@ public class Input extends JFrame {
 			if (login(UserNameTextField.getText(), pw)) {
 
 				Input.username = UserNameTextField.getText();
+				/*try {
+					//userActNum = getUserAccountNum();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}*/
 
 				try {
 
@@ -307,10 +318,10 @@ public class Input extends JFrame {
 			System.out.println(
 					"--------------------------------------------------------");
 		} finally {
-			if (stmt != null) {
-				stmt.close();
+
+
 				dbConn.close();
-			}
+
 		}
 		return foundUser;
 
@@ -384,5 +395,84 @@ public class Input extends JFrame {
 				transactionType, accountType);
 
 	}
+
+	
+/*
+	 public HashMap getTransaction(int transactionID) throws SQLException {
+
+	        HashMap<String, String> hashMap = new HashMap<>();
+	        Database database = new Database();
+	        Connection dbConn = database.getConnection();
+
+	        Statement stmt = null;
+	        try {
+	            stmt = dbConn.createStatement();
+	            ResultSet rs = stmt.executeQuery(
+	                    "select * " +
+	                            "FROM TRANSACTIONS " +
+	                            " WHERE TRANSACTION_ID =" + String.valueOf(transactionID));
+	            while (rs.next()) {
+	                hashMap.put("accountNum", String.valueOf(rs.getInt("ACCOUNT_NUM")));
+	                hashMap.put("accountType", rs.getString("ACCOUNT_TYPE"));
+	                hashMap.put("transactionType", rs.getString("TRANSACTION_TYPE"));
+	                hashMap.put("amount", String.valueOf(rs.getDouble("AMOUNT")));
+	                hashMap.put("transactionTime", rs.getString("TRANSACTION_TIME"));
+	                hashMap.put("transactionID", String.valueOf(rs.getInt("TRANSACTION_ID")));
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("------------------TableGet-----------------");
+	            System.out.println("Cannot get table: " + e);
+	            System.out.println("--------------------------------------------------------");
+	        } finally {
+	            if (stmt != null) {
+	                stmt.close();
+	                dbConn.close();
+	            }
+	        }
+
+	        return hashMap;
+
+
+	    }
+
+
+	    public ArrayList getTransactions(int accountNumber) throws SQLException {
+
+	        ArrayList<HashMap> arrayList = new ArrayList<>();
+	        Database database = new Database();
+	        Connection dbConn = database.getConnection();
+
+	        Statement stmt = null;
+	        try {
+	            stmt = dbConn.createStatement();
+	            ResultSet rs = stmt.executeQuery(
+	                    "select * " +
+	                            "FROM TRANSACTIONS " +
+	                            " WHERE ACCOUNT_NUM =" + String.valueOf(accountNumber));
+	            while (rs.next()) {
+	                HashMap<String, String> hashMap = new HashMap<>();
+	                hashMap.put("accountNum", String.valueOf(rs.getInt("ACCOUNT_NUM")));
+	                hashMap.put("accountType", rs.getString("ACCOUNT_TYPE"));
+	                hashMap.put("transactionType", rs.getString("TRANSACTION_TYPE"));
+	                hashMap.put("amount", String.valueOf(rs.getDouble("AMOUNT")));
+	                hashMap.put("transactionTime", rs.getString("TRANSACTION_TIME"));
+	                hashMap.put("transactionID", String.valueOf(rs.getInt("TRANSACTION_ID")));
+	                arrayList.add(hashMap);
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("------------------TableGet-----------------");
+	            System.out.println("Cannot get from table: " + e);
+	            System.out.println("--------------------------------------------------------");
+	        } finally {
+	            if (stmt != null) {
+	                stmt.close();
+	                dbConn.close();
+	            }
+	        }
+
+	        return arrayList;
+	    }
+	    */
+
 
 }
