@@ -7,6 +7,9 @@ import java.util.Date;
 
 public class Transaction {
 
+    public static boolean noFunds = false;
+
+
     public Transaction(int accountNumber, double amount, String transactionType, String accountType) throws SQLException {
 
 
@@ -102,7 +105,9 @@ public class Transaction {
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
-           System.out.println("Insufficient Funds");
+            noFunds = true;
+
+            System.out.println("Insufficient Funds");
         }
     }
     /*public calculateInterest(Account account){
@@ -111,4 +116,5 @@ public class Transaction {
     }*/
 
 
-}
+	}
+

@@ -1,11 +1,10 @@
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Account {
 
-    private String accountType; //Checkings or Savings
+    private String accountType; 
     private String accountOwner;
     private int accountNumber;
     private double balance = 0d;
@@ -14,13 +13,15 @@ public class Account {
     private String emailAddress;
     private String fName;
     private String lName;
-    private int phoneNum;
+    private long phoneNum;
     private Database database;
     private Connection dbConn;
+    private int iD = 0;
 
 
-    //This constructor acts as a new account registration for users
-    public Account(String username, String password, String emailAddress, String fName, String lName, int phoneNum) throws SQLException {
+
+	//This constructor acts as a new account registration for users
+    public Account(String username, String password, String emailAddress, String fName, String lName, long phoneNum) throws SQLException {
 
         database = new Database();
         dbConn = database.getConnection();
@@ -86,12 +87,12 @@ public class Account {
     }
 
     //this constructor creates checking or savings accounts for existing users
-    public Account (String username, String accountType, double balance){
+    public Account (String user, String accountType, double balance){
 
         database = new Database();
         dbConn = database.getConnection();
         try {
-            createAccount(username, accountType, balance);
+            createAccount(user, accountType, balance);
         } catch (SQLException e) {
             e.printStackTrace();
         }
