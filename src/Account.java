@@ -5,9 +5,6 @@ import java.sql.Statement;
 public class Account {
 
     private String accountType; 
-    private String accountOwner;
-    private int accountNumber;
-    private double balance = 0d;
     private String username;
     private String password;
     private String emailAddress;
@@ -27,8 +24,6 @@ public class Account {
         dbConn = database.getConnection();
 
         //this.accountNumber = getAccountNum();
-        this.accountOwner = username;
-        this.accountType = accountType;
         this.username = username;
         this.password = password;
         this.emailAddress = emailAddress;

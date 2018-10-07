@@ -27,14 +27,6 @@ public class Database {
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-       /* } finally {
-            try {
-                if (databaseConn != null) {
-                    databaseConn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }*/
         }
     }
 

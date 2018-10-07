@@ -10,8 +10,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Vector;
-
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -40,9 +38,8 @@ public class Display extends JDialog {
 	Date d1 = new Date();
 	private boolean hasBeenClicked = false;
 
-	public Display() throws SQLException {
+	public Display() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
 		setTitle("G7 Bank          " + d1.toString());
 		setBounds(100, 100, 474, 509);
 		getContentPane().setLayout(new BorderLayout());
@@ -53,17 +50,13 @@ public class Display extends JDialog {
 		JLabel lblEnterInitialBalance = new JLabel("Transaction:");
 		lblEnterInitialBalance.setBounds(10, 60, 97, 14);
 		contentPanel.add(lblEnterInitialBalance);
-
 		jScrollPane1 = new javax.swing.JScrollPane();
-
-		ButtonGroup bgroup = new ButtonGroup();
 
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(
 				new DefaultComboBoxModel(new String[] {"Deposit", "Withdrawal"}));
 		comboBox.setBounds(87, 56, 163, 22);
 		contentPanel.add(comboBox);
-
 		transactionAmount = new JTextField();
 		transactionAmount.setBounds(274, 57, 104, 21);
 		contentPanel.add(transactionAmount);
@@ -101,24 +94,21 @@ public class Display extends JDialog {
 		detailsPannel.add(separator_1);
 
 		JButton chkTrans = new JButton("Transaction History");
-		chkTrans.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					JTable table = new JTable(
-							buildTableModel(Input.accountNum));
-					UIManager.put("OptionPane.minimumSize",
-							new Dimension(800, 800));
-					JOptionPane.showMessageDialog(null, new JScrollPane(table),
-							Input.username + "'s"
-									+ " Checking Account Transaction History",
-							JOptionPane.INFORMATION_MESSAGE);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
+		chkTrans.addActionListener(e -> {
+			try {
+				JTable table = new JTable(
+						buildTableModel(Input.accountNum));
+				UIManager.put("OptionPane.minimumSize",
+						new Dimension(800, 800));
+				JOptionPane.showMessageDialog(null, new JScrollPane(table),
+						Input.username + "'s"
+								+ " Checking Account Transaction History",
+						JOptionPane.INFORMATION_MESSAGE);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+
 		});
 		chkTrans.setBounds(108, 99, 202, 23);
 		detailsPannel.add(chkTrans);
@@ -126,10 +116,8 @@ public class Display extends JDialog {
 		JLabel label_7 = new JLabel("");
 		label_7.setBounds(157, 88, 0, 0);
 		detailsPannel.add(label_7);
-
 		lblSavActBal.setBounds(312, 188, 97, 14);
 		detailsPannel.add(lblSavActBal);
-
 		curChkActBal.setBounds(301, 52, 108, 14);
 		detailsPannel.add(curChkActBal);
 
@@ -221,31 +209,23 @@ public class Display extends JDialog {
 		button.setActionCommand("OK");
 
 		JButton btnNewButton = new JButton("View Account Details");
-		btnNewButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(!hasBeenClicked) {
-				detailsPannel.setVisible(true);
-				displayBalance();
-				}
-				else {
-					detailsPannel.setVisible(false);
-				}
-
-				 hasBeenClicked = ! hasBeenClicked;
-
+		btnNewButton.addActionListener(e -> {
+			if(!hasBeenClicked) {
+			detailsPannel.setVisible(true);
+			displayBalance();
 			}
+			else {
+				detailsPannel.setVisible(false);
+			}
+
+			 hasBeenClicked = ! hasBeenClicked;
+
 		});
 		btnNewButton.setBounds(127, 91, 163, 23);
 		contentPanel.add(btnNewButton);
 
 		JButton btnLogOut = new JButton("Log Out");
-		btnLogOut.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		btnLogOut.addActionListener(e -> System.exit(0));
 		btnLogOut.setBounds(20, 91, 89, 23);
 		contentPanel.add(btnLogOut);
 	}
@@ -261,7 +241,7 @@ public class Display extends JDialog {
 		try {
 			String sql = "SELECT * FROM TRANSACTIONS WHERE ACCOUNT_NUM = ?";
 			PreparedStatement pst = dbConn.prepareStatement(sql);
-			pst.setInt(1, Input.accountNum);
+			pst.setInt(1, actNum);
 			rs = pst.executeQuery();
 			metaData = rs.getMetaData();
 

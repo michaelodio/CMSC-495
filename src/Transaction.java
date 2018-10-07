@@ -1,5 +1,3 @@
-
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,6 +41,7 @@ public class Transaction {
 	        } finally {
 	            if (createStmt != null) {
 	                createStmt.close();
+	                dbConn.close();
 	            }
 
 	        }

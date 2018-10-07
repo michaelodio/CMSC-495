@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -387,6 +386,7 @@ public class Input extends JFrame {
 		} finally {
 			if (insertStmt != null) {
 				insertStmt.close();
+				dbConn.close();
 			}
 		}
 	}
