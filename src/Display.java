@@ -42,6 +42,7 @@ public class Display extends JDialog {
 	private boolean hasBeenClicked = false;
 
 	public Display() throws SQLException {
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		setTitle("G7 Bank          " + d1.toString());
 		setBounds(100, 100, 474, 509);
@@ -236,8 +237,18 @@ public class Display extends JDialog {
 
 			}
 		});
-		btnNewButton.setBounds(87, 89, 163, 23);
+		btnNewButton.setBounds(127, 91, 163, 23);
 		contentPanel.add(btnNewButton);
+
+		JButton btnLogOut = new JButton("Log Out");
+		btnLogOut.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		btnLogOut.setBounds(20, 91, 89, 23);
+		contentPanel.add(btnLogOut);
 	}
 
 	public DefaultTableModel buildTableModel(int actNum) throws SQLException {
