@@ -1,4 +1,6 @@
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +35,7 @@ public class Input extends JFrame {
 	static String accountType = "";
 	static int accountNum = 0;
 
+
 	String password = "";
 	String emailAddress = "";
 	String fName = "";
@@ -41,7 +44,7 @@ public class Input extends JFrame {
 
 	public Input() {
 		setTitle("G7 Bank");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 559, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -197,6 +200,7 @@ public class Input extends JFrame {
 				try {
 					createUserAccount();
 					createNewAccount(Input.username, accountType, 0);
+
 					JOptionPane.showMessageDialog(null,
 							"Account Created! Please Login with your Username and Password!");
 					registerPanel.setVisible(false);
@@ -226,13 +230,14 @@ public class Input extends JFrame {
 				try {
 					getAccountType();
 					getAccountNum(username);
+
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
 				try {
-
+					close();
 					Display dialog = new Display();
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
@@ -392,6 +397,11 @@ public class Input extends JFrame {
 		Transaction transaction = new Transaction(accountNumber, amount,
 				transactionType, accountType);
 
+	}
+
+	public void close() {
+		WindowEvent winClosingEvent = new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
 	}
 
 }

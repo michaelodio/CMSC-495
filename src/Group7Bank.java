@@ -10,15 +10,7 @@ public class Group7Bank {
        frame.setVisible(true);
 
 
-      new java.util.Timer().schedule(
-   	        new java.util.TimerTask() {
-   	            @Override
-   	            public void run() {
-   	            	frame.setVisible(false);
-   	            }
-   	        },
-   	        120000
-   	);
+      
     }
 }
 
