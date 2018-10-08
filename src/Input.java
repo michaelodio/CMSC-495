@@ -1,11 +1,9 @@
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -240,6 +238,23 @@ public class Input extends JFrame {
 					Display dialog = new Display();
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
+					// DEBUG for interest testing
+
+
+
+					Date currentDate = new Date();
+					Date lastTransaction = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(getLastInterestDate(accountNum));
+
+
+					//if it has been more than 30 days since the last interest calculation
+					if ((currentDate.getTime() - lastTransaction.getTime()) / 86400000 > 30 ){
+
+						new Transaction(accountNum, 0d, "interest", accountType);
+						System.out.println("calculated interest!");
+
+					}
+
+
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -256,6 +271,7 @@ public class Input extends JFrame {
 		btnRegister.addActionListener(e -> registerPanel.setVisible(true));
 		btnRegister.setBounds(171, 150, 89, 23);
 		contentPane.add(btnRegister);
+
 	}
 
 	public void createUserAccount() throws SQLException {
@@ -271,6 +287,7 @@ public class Input extends JFrame {
 		Login login = new Login(username, password);
 		try {
 			if (login.checkCredentials()) {
+
 				return true;
 			} else {
 				return false;
@@ -301,6 +318,38 @@ public class Input extends JFrame {
 		}
 
 		return accountType;
+	}
+
+	public String getLastInterestDate(int accountNum) throws SQLException {
+
+		Database database = new Database();
+		Connection dbConn = database.getConnection();
+		String transactionTime = "";
+
+		try {
+			String sql = "SELECT TRANSACTION_TIME FROM TRANSACTIONS WHERE TRANSACTION_TYPE = ? ORDER BY TRANSACTION_ID DESC LIMIT 1";
+			PreparedStatement pst = dbConn.prepareStatement(sql);
+			pst.setString(1, "interest");
+
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+
+				transactionTime = rs.getString("TRANSACTION_TIME");
+			}
+
+			System.out.println("Last Transaction Time: " + transactionTime);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			dbConn.close();
+		}
+
+		return transactionTime;
+
+
 	}
 
 	public int getAccountNum(String user) throws SQLException {

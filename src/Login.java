@@ -36,7 +36,6 @@ public class Login {
             System.out.println("--------------------------------------------------------");
         } finally {
             if (stmt != null) { stmt.close(); }
-            dbConn.close();
         }
 
 
