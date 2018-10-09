@@ -238,20 +238,27 @@ public class Input extends JFrame {
 					Display dialog = new Display();
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
-					// DEBUG for interest testing
 
-
+					//Calculating Interest
 
 					Date currentDate = new Date();
-					Date lastTransaction = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(getLastInterestDate(accountNum));
+					String lastTransactionString = getLastInterestDate(accountNum);
+					Date lastTransaction;
 
+					if (lastTransactionString != null && !lastTransactionString.equals("1") && !lastTransactionString.equals("")) {
+						lastTransaction = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(lastTransactionString);
+					} else {
+						lastTransaction = null;
+					}
 
 					//if it has been more than 30 days since the last interest calculation
-					if ((currentDate.getTime() - lastTransaction.getTime()) / 86400000 > 30 ){
+					if (!lastTransactionString.equals("1")) {
+						if (lastTransactionString.equals("") || ((currentDate.getTime() - lastTransaction.getTime()) / 86400000 >= 30)) {
 
-						new Transaction(accountNum, 0d, "interest", accountType);
-						System.out.println("calculated interest!");
+							new Transaction(accountNum, 0d, "interest", accountType);
+							System.out.println("calculated interest!");
 
+						}
 					}
 
 
@@ -341,7 +348,19 @@ public class Input extends JFrame {
 			System.out.println("Last Transaction Time: " + transactionTime);
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+
+			//If the tables doesn't exist yet or if the database is unavailable
+			String message = e.getMessage();
+
+			System.out.println(message);
+
+			if (message.contains("no such table")){
+				dbConn.close();
+				return "1";
+			}else {
+				dbConn.close();
+				return null;
+			}
 		} finally {
 
 			dbConn.close();
