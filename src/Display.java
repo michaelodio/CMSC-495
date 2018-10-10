@@ -130,8 +130,7 @@ public class Display extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				StringBuilder warnings = new StringBuilder();
-				boolean olderThan30 = false;
+				StringBuilder warnings = new StringBuilder();				
 
 				if (transactionAmount.getText().isEmpty()) {
 					warnings.append("Transaction amount must not be empty\n");
