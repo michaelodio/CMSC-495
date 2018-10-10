@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,6 +11,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Vector;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -81,10 +83,6 @@ public class Display extends JDialog {
 		lblCheckingAccountDetails.setFont(new Font("Tahoma", Font.BOLD, 16));
 		detailsPannel.add(lblCheckingAccountDetails);
 
-		JLabel lblInterestEarned = new JLabel("Interest Earned:");
-		lblInterestEarned.setBounds(20, 74, 164, 14);
-		detailsPannel.add(lblInterestEarned);
-
 		JLabel label_3 = new JLabel("");
 		label_3.setBounds(184, 41, 0, 0);
 		detailsPannel.add(label_3);
@@ -121,10 +119,6 @@ public class Display extends JDialog {
 		curChkActBal.setBounds(301, 52, 108, 14);
 		detailsPannel.add(curChkActBal);
 
-		JLabel chkIntEarned = new JLabel("");
-		chkIntEarned.setBounds(301, 74, 46, 14);
-		detailsPannel.add(chkIntEarned);
-
 		JLabel savIntEarnedlbl = new JLabel("");
 		savIntEarnedlbl.setBounds(310, 213, 46, 14);
 		detailsPannel.add(savIntEarnedlbl);
@@ -137,6 +131,7 @@ public class Display extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 
 				StringBuilder warnings = new StringBuilder();
+				boolean olderThan30 = false;
 
 				if (transactionAmount.getText().isEmpty()) {
 					warnings.append("Transaction amount must not be empty\n");
