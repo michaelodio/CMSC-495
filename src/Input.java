@@ -2,6 +2,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
@@ -413,6 +415,9 @@ public class Input extends JFrame {
 			while (rs.next()) {
 				balance = rs.getDouble("BALANCE");
 			}
+			NumberFormat formatter = new DecimalFormat("#0.00");
+			balance = Double.parseDouble(formatter.format(balance));
+
 		} catch (SQLException e) {
 			System.out
 					.println("------------------TableInsert-----------------");

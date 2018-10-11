@@ -1,12 +1,16 @@
-import javax.swing.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 class Transaction {
+
+    NumberFormat formatter = new DecimalFormat("#0.00");
 
     static boolean noFunds = false;
 
@@ -71,7 +75,7 @@ class Transaction {
                             "values('" + accountNumber + "','" + accountType + "', " +
                             "'" + transactionType + "', " +
                             "'" + dateFormat.format(date) + "', " +
-                            "'" + amount + "')");
+                            "'" + Double.parseDouble(formatter.format(amount)) + "')");
         } catch (SQLException e) {
             System.out.println("------------------TableInsert-----------------");
             System.out.println("Cannot insert into Transactions table: " + e);
@@ -89,7 +93,9 @@ class Transaction {
 
     private void depositFunds(double amount, int accountNumber) {
         try {
-            Input.setBalance(Input.getBalance(accountNumber) + amount, accountNumber);
+            NumberFormat formatter = new DecimalFormat("#0.00");
+            double balance = Input.getBalance(accountNumber);
+            Input.setBalance(balance + Double.parseDouble(formatter.format(amount)), accountNumber);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -124,10 +130,10 @@ class Transaction {
 
             if (accountType.equals("Checking")) {
                 interestAmount = currentBalance * .0006d;
-                Input.setBalance(currentBalance + (interestAmount), accountNum);
+                depositFunds(interestAmount, accountNum);
             } else {
                 interestAmount = currentBalance * .04d;
-                Input.setBalance(currentBalance + (interestAmount), accountNum);
+                depositFunds(interestAmount, accountNum);
             }
 
             //DEBUG
