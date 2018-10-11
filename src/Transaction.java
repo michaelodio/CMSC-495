@@ -10,7 +10,7 @@ import java.util.Date;
 
 class Transaction {
 
-    NumberFormat formatter = new DecimalFormat("#0.00");
+    private NumberFormat formatter = new DecimalFormat("#0.00");
 
     static boolean noFunds = false;
 
